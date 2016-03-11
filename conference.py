@@ -733,7 +733,10 @@ class ConferenceApi(remote.Service):
         cks = [ndb.Key(urlsafe=sess.websafeConfKey) for sess in sesns]
 
         # query all conferences and filter by session.conference_key
-        confs = Conference.query(Conference.key.IN(cks))
+        if len(cks) > 0:
+            confs = Conference.query(Conference.key.IN(cks))
+        else:
+            confs = Conference.query(Conference.name == '')
 
         # get registered conferences, and remove from query
         conf_keys = [ndb.Key(urlsafe=ck) for ck in prof.conferenceKeysToAttend]
